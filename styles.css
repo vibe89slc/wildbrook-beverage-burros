@@ -1,0 +1,245 @@
+:root {
+  --moss: #4a6b4a;
+  --moss-deep: #3a5a3d;
+  --moss-dark: #28402a;
+  --cream: #faf3e3;
+  --cream-warm: #f1e5cb;
+  --paper: #fffaf0;
+  --sage: #d4dec9;
+  --sage-deep: #a8bd9e;
+  --peach: #f6d8c0;
+  --terra: #d57a4a;
+  --terra-deep: #b25c30;
+  --brass: #c8a56a;
+  --ink: #2b2620;
+  --ink-soft: #4a4338;
+  --shadow: rgba(74, 67, 56, 0.12);
+  --shadow-strong: rgba(74, 67, 56, 0.24);
+
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --shell-max: 1100px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+.shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  color: var(--moss-dark);
+  margin: 0 0 16px;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 500; }
+h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 500; }
+h2 em, h1 em { font-style: italic; color: var(--terra-deep); }
+
+p { margin: 0 0 16px; color: var(--ink-soft); }
+
+.eyebrow {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--terra-deep);
+  margin: 0 0 14px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+.btn__arrow { transition: transform 0.2s ease; }
+.btn:hover { transform: translateY(-2px); }
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+.btn--terra {
+  background: var(--terra);
+  color: var(--cream);
+  box-shadow: 0 8px 20px rgba(213, 122, 74, 0.35);
+}
+.btn--terra:hover { background: var(--terra-deep); }
+
+.btn--outline {
+  background: transparent;
+  color: var(--moss-dark);
+  border-color: var(--moss-dark);
+}
+.btn--outline:hover { background: var(--moss-dark); color: var(--cream); }
+
+.btn--small { padding: 10px 18px; font-size: 0.9rem; }
+.btn--large { padding: 18px 32px; font-size: 1.08rem; }
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 250, 240, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--shadow);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.wordmark__icon { flex-shrink: 0; border-radius: 8px; overflow: hidden; }
+.wordmark__text {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--moss-dark);
+}
+.wordmark__text em { font-style: italic; color: var(--terra-deep); }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; }
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% center;
+}
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(40, 64, 42, 0.92) 0%, rgba(40, 64, 42, 0.78) 38%, rgba(40, 64, 42, 0.35) 68%, rgba(40, 64, 42, 0.12) 100%);
+}
+.hero__content {
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(80px, 14vw, 160px);
+  padding-bottom: clamp(80px, 14vw, 160px);
+  max-width: 680px;
+}
+.hero .eyebrow { color: var(--peach); }
+.hero h1 { color: var(--cream); }
+.hero__lede { color: rgba(250, 243, 227, 0.88); font-size: 1.12rem; max-width: 520px; }
+.hero__ctas { margin-top: 8px; }
+
+/* Photo labels — these stock/demo photos aren't the client's actual herd or events */
+.photo-tag {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 2;
+  background: rgba(43, 38, 32, 0.68);
+  backdrop-filter: blur(4px);
+  color: var(--cream);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Event section */
+.event { padding: clamp(64px, 10vw, 108px) 0; background: var(--cream); }
+.event__grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+.event__media { position: relative; }
+.event__media img {
+  border-radius: 20px;
+  box-shadow: 0 20px 50px var(--shadow-strong);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 20%;
+}
+.event__media .photo-tag { bottom: 14px; right: 14px; }
+.event__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  margin-bottom: 20px;
+}
+.event__date {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--terra-deep);
+}
+.event__place {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+/* Contact */
+.contact { padding: clamp(72px, 12vw, 120px) 0; background: var(--moss-dark); text-align: center; }
+.contact h2 { color: var(--cream); }
+.contact p { color: rgba(250, 243, 227, 0.82); max-width: 520px; margin-left: auto; margin-right: auto; font-size: 1.05rem; }
+.contact .btn { margin-top: 8px; }
+
+/* Footer */
+.site-footer { padding: 28px 0; background: var(--ink); }
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  justify-content: space-between;
+  color: rgba(250, 243, 227, 0.6);
+  font-size: 0.85rem;
+}
+.site-footer__credit a { color: rgba(250, 243, 227, 0.75); }
+.site-footer__credit a:hover { color: var(--peach); }
+
+@media (max-width: 780px) {
+  .event__grid { grid-template-columns: 1fr; }
+  .event__media { order: -1; }
+  .event__media img { aspect-ratio: 16 / 10; }
+  .wordmark__text { font-size: 0.92rem; }
+}
