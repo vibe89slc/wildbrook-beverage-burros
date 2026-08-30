@@ -1,29 +1,42 @@
 :root {
-  --moss: #4a6b4a;
-  --moss-deep: #3a5a3d;
-  --moss-dark: #28402a;
-  --cream: #faf3e3;
-  --cream-warm: #f1e5cb;
-  --paper: #fffaf0;
-  --sage: #d4dec9;
-  --sage-deep: #a8bd9e;
-  --peach: #f6d8c0;
-  --terra: #d57a4a;
-  --terra-deep: #b25c30;
-  --brass: #c8a56a;
-  --ink: #2b2620;
-  --ink-soft: #4a4338;
-  --shadow: rgba(74, 67, 56, 0.12);
-  --shadow-strong: rgba(74, 67, 56, 0.24);
+  /* Forest palette: deep near-black forest + bone + single amber accent.
+     Deliberately not the beige/cream + terracotta/brass + espresso combo
+     used on the main wildbrook-bevvy-burros site render, that family reads
+     as generic "artisan AI default" at this contrast; this is the same
+     brand hue family pushed colder and darker for a one-page premium
+     placement. */
+  --forest-950: #0c1712;
+  --forest-800: #17251d;
+  --bone: #eef0e8;
+  --bone-deep: #e1e5d6;
+  --paper: #f7f8f3;
+  --amber: #c9973f;
+  --amber-deep: #a67a2c;
+  --ink: #10160f;
+  --ink-soft: #3d4a3f;
+  --hairline: rgba(16, 22, 15, 0.14);
+  --hairline-on-dark: rgba(238, 240, 232, 0.16);
+  --shadow: rgba(12, 23, 18, 0.16);
+  --shadow-strong: rgba(12, 23, 18, 0.32);
 
+  /* Fraunces + Inter are the client's real, already-live brand type on
+     wildbrook-bevvy-burros.com. Kept here on purpose for cross-property
+     consistency rather than swapped for novelty. */
   --font-display: "Fraunces", "Times New Roman", serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   --shell-max: 1100px;
+  --radius-soft: 20px;
+  --radius-tag: 6px;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
 
 body {
   margin: 0;
@@ -45,15 +58,15 @@ img { max-width: 100%; display: block; }
 
 h1, h2 {
   font-family: var(--font-display);
-  color: var(--moss-dark);
+  color: var(--ink);
   margin: 0 0 16px;
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
-h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 500; }
-h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 500; }
-h2 em, h1 em { font-style: italic; color: var(--terra-deep); }
+h1 { font-size: clamp(2.4rem, 5.6vw, 4rem); font-weight: 500; }
+h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); font-weight: 500; }
+h2 em, h1 em { font-style: italic; color: var(--amber-deep); line-height: 1.15; padding-bottom: 0.08em; display: inline-block; }
 
 p { margin: 0 0 16px; color: var(--ink-soft); }
 
@@ -61,13 +74,42 @@ p { margin: 0 0 16px; color: var(--ink-soft); }
   font-family: var(--font-body);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  color: var(--terra-deep);
+  color: var(--amber-deep);
   margin: 0 0 14px;
 }
 
-/* Buttons */
+/* Reveal-on-scroll for below-the-fold sections, motivated: sequence the
+   page's information the way a reader should take it in, not a decoration */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* Hero content is above the fold, so it fades in on its own with plain CSS
+   rather than waiting on a scroll observer (no flash if JS is slow/blocked) */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-in {
+  opacity: 0;
+  animation: hero-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.hero-in--1 { animation-delay: 0.05s; }
+.hero-in--2 { animation-delay: 0.15s; }
+.hero-in--3 { animation-delay: 0.28s; }
+.hero-in--4 { animation-delay: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero-in { opacity: 1; animation: none; }
+}
+
+/* Buttons: one accent, one shape (full pill), one label everywhere it appears */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -84,55 +126,35 @@ p { margin: 0 0 16px; color: var(--ink-soft); }
 }
 .btn__arrow { transition: transform 0.2s ease; }
 .btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(0.97); }
 .btn:hover .btn__arrow { transform: translateX(3px); }
 
-.btn--terra {
-  background: var(--terra);
-  color: var(--cream);
-  box-shadow: 0 8px 20px rgba(213, 122, 74, 0.35);
+.btn--amber {
+  background: var(--amber);
+  color: var(--ink);
+  box-shadow: 0 10px 24px rgba(166, 122, 44, 0.28);
 }
-.btn--terra:hover { background: var(--terra-deep); }
+.btn--amber:hover { background: var(--amber-deep); }
 
 .btn--outline {
   background: transparent;
-  color: var(--moss-dark);
-  border-color: var(--moss-dark);
+  color: var(--bone);
+  border-color: var(--hairline-on-dark);
 }
-.btn--outline:hover { background: var(--moss-dark); color: var(--cream); }
+.btn--outline:hover { background: rgba(238, 240, 232, 0.08); border-color: var(--bone); }
 
-.btn--small { padding: 10px 18px; font-size: 0.9rem; }
-.btn--large { padding: 18px 32px; font-size: 1.08rem; }
-
-/* Header */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(255, 250, 240, 0.88);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--shadow);
-}
-.site-header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-.wordmark {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
+.btn--outline-dark {
+  background: transparent;
   color: var(--ink);
+  border-color: var(--hairline);
 }
-.wordmark__logo {
-  height: 58px;
-  width: auto;
-  display: block;
-}
+.btn--outline-dark:hover { background: rgba(16, 22, 15, 0.05); border-color: var(--ink-soft); }
+
+.btn--small { padding: 10px 18px; font-size: 0.88rem; }
+.btn--large { padding: 18px 32px; font-size: 1.06rem; }
 
 /* Hero */
-.hero { position: relative; overflow: hidden; z-index: 0; }
+.hero { position: relative; overflow: hidden; }
 .hero__media {
   position: absolute;
   inset: 0;
@@ -143,53 +165,181 @@ p { margin: 0 0 16px; color: var(--ink-soft); }
   height: 100%;
   object-fit: cover;
   object-position: 30% center;
+  filter: grayscale(12%) contrast(1.05) saturate(0.92);
 }
 .hero__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, rgba(40, 64, 42, 0.92) 0%, rgba(40, 64, 42, 0.78) 38%, rgba(40, 64, 42, 0.35) 68%, rgba(40, 64, 42, 0.12) 100%);
+  background: linear-gradient(100deg, rgba(12, 23, 18, 0.94) 0%, rgba(12, 23, 18, 0.82) 38%, rgba(12, 23, 18, 0.4) 68%, rgba(12, 23, 18, 0.14) 100%);
 }
 .hero__badge {
   position: absolute;
   z-index: 1;
-  top: clamp(28px, 4vw, 48px);
-  right: clamp(24px, 5vw, 64px);
-  width: clamp(96px, 12vw, 150px);
+  top: clamp(28px, 4.2vw, 56px);
+  right: clamp(20px, 5vw, 64px);
+  width: clamp(150px, 20vw, 260px);
   height: auto;
-  filter: drop-shadow(0 6px 16px rgba(20, 24, 22, 0.35));
+  filter: drop-shadow(0 8px 22px rgba(6, 12, 9, 0.4));
 }
 .hero__content {
   position: relative;
   z-index: 1;
-  padding-top: clamp(80px, 14vw, 160px);
-  padding-bottom: clamp(80px, 14vw, 160px);
-  max-width: 680px;
+  padding-top: clamp(56px, 7vw, 96px);
+  padding-bottom: clamp(64px, 9vw, 112px);
+  max-width: 640px;
 }
-.hero .eyebrow { color: var(--peach); }
-.hero h1 { color: var(--cream); }
-.hero__lede { color: rgba(250, 243, 227, 0.88); font-size: 1.12rem; max-width: 520px; }
+.hero .eyebrow { color: var(--amber); }
+.hero h1 { color: var(--bone); }
+.hero__lede { color: rgba(238, 240, 232, 0.86); font-size: 1.1rem; max-width: 480px; }
 .hero__ctas { margin-top: 8px; }
 
-/* Photo labels — these stock/demo photos aren't the client's actual herd or events */
+/* Photo labels: a plain disclosure, not a decorative caption */
 .photo-tag {
   position: absolute;
   bottom: 14px;
   right: 14px;
   z-index: 2;
-  background: rgba(43, 38, 32, 0.68);
+  background: rgba(12, 23, 18, 0.7);
+  border: 1px solid var(--hairline-on-dark);
   backdrop-filter: blur(4px);
-  color: var(--cream);
-  font-size: 0.72rem;
+  color: var(--bone);
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   padding: 6px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-tag);
   white-space: nowrap;
 }
 
+/* Manifesto: a quiet typographic break between the hero and the gallery.
+   No photo here on purpose, a real detail about how the service actually
+   works (handlers pair the bonded pair, guests don't pick), not a stock
+   image standing in for a moment we don't have yet. */
+.manifesto { padding: clamp(72px, 11vw, 128px) 0; background: var(--paper); }
+.manifesto__inner {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+}
+.manifesto__line {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.3;
+  padding-bottom: 0.1em;
+  margin: 0 0 12px;
+}
+.manifesto__sub {
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* Gallery: horizontal scroll-snap carousel, motivated as the right pattern
+   for breadth (several example images) rather than a grid competing for
+   the same attention as the event photo above it */
+.gallery { padding: clamp(64px, 10vw, 108px) 0; background: var(--paper); }
+.gallery__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+.gallery__head h2 { margin-bottom: 8px; }
+.gallery__head p { margin: 0; max-width: 440px; }
+.gallery__nav { display: flex; gap: 10px; flex-shrink: 0; }
+.gallery__nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.gallery__nav-btn:hover { background: var(--bone); border-color: var(--ink-soft); }
+.gallery__nav-btn:active { transform: scale(0.94); }
+
+.gallery__track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 24px 20px;
+  margin: 0 -24px;
+  scrollbar-width: none;
+}
+.gallery__track::-webkit-scrollbar { display: none; }
+.gallery__card {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(220px, 32vw, 320px);
+  aspect-ratio: 4 / 5;
+  scroll-snap-align: start;
+  border-radius: var(--radius-soft);
+  overflow: hidden;
+  box-shadow: 0 16px 36px var(--shadow);
+}
+.gallery__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(12%) contrast(1.05) saturate(0.92);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gallery__card:hover img { transform: scale(1.045); }
+.gallery__card .photo-tag { bottom: 10px; right: 10px; }
+
 /* Event section */
-.event { padding: clamp(64px, 10vw, 108px) 0; background: var(--cream); }
+.event { position: relative; overflow: hidden; padding: clamp(64px, 10vw, 108px) 0; background: var(--bone); }
+
+/* Debossed logo impression: two offset copies of the same fine-line mask,
+   a dark sliver on the top-left edge of every stroke and a light sliver on
+   the bottom-right, reads as the mark pressed into the page rather than a
+   flat watermark printed on top of it. */
+.event__watermark {
+  position: absolute;
+  z-index: 0;
+  right: -8%;
+  bottom: -14%;
+  width: clamp(440px, 58vw, 720px);
+  aspect-ratio: 614 / 733;
+  pointer-events: none;
+}
+.event__watermark::before,
+.event__watermark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: url("images/logo-mark-black.png");
+  mask-image: url("images/logo-mark-black.png");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.event__watermark::after {
+  background: rgba(16, 22, 15, 0.16);
+  transform: translate(-2px, -2px);
+}
+.event__watermark::before {
+  background: rgba(255, 255, 255, 0.75);
+  transform: translate(2px, 2px);
+}
 .event__grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   gap: clamp(32px, 5vw, 64px);
@@ -197,53 +347,72 @@ p { margin: 0 0 16px; color: var(--ink-soft); }
 }
 .event__media { position: relative; }
 .event__media img {
-  border-radius: 20px;
+  border-radius: var(--radius-soft);
   box-shadow: 0 20px 50px var(--shadow-strong);
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: center 20%;
+  filter: grayscale(12%) contrast(1.05) saturate(0.92);
 }
-.event__media .photo-tag { bottom: 14px; right: 14px; }
-.event__meta {
+
+.event__date-block {
   display: flex;
-  flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px 14px;
+  gap: 18px;
+  padding-bottom: 18px;
   margin-bottom: 20px;
+  border-bottom: 1px solid var(--hairline);
 }
 .event__date {
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--terra-deep);
+  font-style: italic;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  font-weight: 500;
+  color: var(--amber-deep);
+  line-height: 1.15;
+  padding-bottom: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .event__place {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--ink-soft);
+  max-width: 220px;
 }
 
-/* Contact */
-.contact { padding: clamp(72px, 12vw, 120px) 0; background: var(--moss-dark); text-align: center; }
-.contact h2 { color: var(--cream); }
-.contact p { color: rgba(250, 243, 227, 0.82); max-width: 520px; margin-left: auto; margin-right: auto; font-size: 1.05rem; }
+/* Contact: the one deliberate dark statement band, same forest-950 as the
+   hero scrim and footer so the page keeps a single dark family */
+.contact { padding: clamp(72px, 12vw, 120px) 0; background: var(--forest-950); text-align: center; }
+.contact h2 { color: var(--bone); }
+.contact p { color: rgba(238, 240, 232, 0.78); max-width: 480px; margin-left: auto; margin-right: auto; font-size: 1.04rem; }
 .contact .btn { margin-top: 8px; }
 
 /* Footer */
-.site-footer { padding: 28px 0; background: var(--ink); }
+.site-footer { padding: 28px 0; background: var(--forest-950); border-top: 1px solid var(--hairline-on-dark); }
 .site-footer__inner {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 20px;
   justify-content: space-between;
-  color: rgba(250, 243, 227, 0.6);
+  color: rgba(238, 240, 232, 0.56);
   font-size: 0.85rem;
 }
-.site-footer__credit a { color: rgba(250, 243, 227, 0.75); }
-.site-footer__credit a:hover { color: var(--peach); }
+.site-footer__credit a { color: rgba(238, 240, 232, 0.72); text-decoration: none; border-bottom: 1px solid var(--hairline-on-dark); }
+.site-footer__credit a:hover { color: var(--amber); border-color: var(--amber); }
 
 @media (max-width: 780px) {
   .event__grid { grid-template-columns: 1fr; }
   .event__media { order: -1; }
   .event__media img { aspect-ratio: 16 / 10; }
-  .wordmark__text { font-size: 0.92rem; }
+  .event__date-block { flex-wrap: wrap; gap: 8px 18px; }
+  .gallery__head { flex-direction: column; align-items: flex-start; }
+  .gallery__nav { align-self: flex-end; }
+}
+
+@media (max-width: 560px) {
+  .hero__badge {
+    width: 76px;
+    top: 18px;
+    right: 18px;
+  }
 }
