@@ -389,6 +389,7 @@ p { margin: 0 0 16px; color: var(--ink-soft); }
 .contact h2 { color: var(--bone); }
 .contact p { color: rgba(238, 240, 232, 0.78); max-width: 480px; margin-left: auto; margin-right: auto; font-size: 1.04rem; }
 .contact .btn { margin-top: 8px; }
+.contact__ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 
 /* Footer */
 .site-footer { padding: 28px 0; background: var(--forest-950); border-top: 1px solid var(--hairline-on-dark); }
@@ -402,6 +403,8 @@ p { margin: 0 0 16px; color: var(--ink-soft); }
 }
 .site-footer__credit a { color: rgba(238, 240, 232, 0.72); text-decoration: none; border-bottom: 1px solid var(--hairline-on-dark); }
 .site-footer__credit a:hover { color: var(--amber); border-color: var(--amber); }
+.site-footer__email a { color: rgba(238, 240, 232, 0.72); text-decoration: none; border-bottom: 1px solid var(--hairline-on-dark); }
+.site-footer__email a:hover { color: var(--amber); border-color: var(--amber); }
 
 @media (max-width: 780px) {
   .event__grid { grid-template-columns: 1fr; }
